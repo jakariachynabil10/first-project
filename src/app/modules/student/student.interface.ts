@@ -12,6 +12,7 @@ export type UserName = {
 
 export type Student = {
   id: string;
+  password: string;
   name: UserName;
   gender: 'male' | 'Female';
   dateOfBirth: string;
@@ -22,4 +23,5 @@ export type Student = {
   guardian: Guardian;
   profileImg?: string;
   isActive: boolean;
+  isDeleted: boolean;
 };

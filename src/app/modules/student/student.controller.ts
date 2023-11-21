@@ -10,8 +10,13 @@ const createStudent = async (req: Request, res: Response) => {
       message: 'Student is created Successfully',
       data: result,
     });
-  } catch (err) {
-    console.log(err);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err : any) {
+    res.status(500).json({
+      success: true,
+      message: err.message,
+      error: err,
+    });
   }
 };
 
@@ -23,12 +28,80 @@ const getAllStudents = async (req: Request, res: Response) => {
       message: 'Student retrieved Successfully',
       data: result,
     });
-  } catch (err) {
-    console.log(err);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    res.status(500).json({
+      success: true,
+      message: err.message,
+      error: err,
+    });
+  }
+};
+const getSingleStudents = async (req: Request, res: Response) => {
+  try {
+    const { singleId } = req.params;
+    const result = await StudentServices.getSingleStudentsFromDB(singleId);
+    res.status(200).json({
+      success: true,
+      message: 'Student retrieved Successfully',
+      data: result,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    res.status(500).json({
+      success: true,
+      message: err.message,
+      error: err,
+    });
+  }
+};
+
+const deleteSingleStudents = async (req: Request, res: Response) => {
+  try {
+    const { singleId } = req.params;
+    const result = await StudentServices.deleteSingleStudentsFromDB(singleId);
+    res.status(200).json({
+      success: true,
+      message: 'Student Deleted Successfully',
+      data: result,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    res.status(500).json({
+      success: true,
+      message: err.message,
+      error: err,
+    });
+  }
+};
+
+const updateSingleStudents = async (req: Request, res: Response) => {
+  try {
+    const { singleId } = req.params;
+    const updateData = req.body.student;
+    const result = await StudentServices.updateSingleStudentsFromDB(
+      singleId,
+      updateData,
+    );
+    res.status(200).json({
+      success: true,
+      message: 'Student Updated Successfully',
+      data: result,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    res.status(500).json({
+      success: true,
+      message: err.message,
+      error: err,
+    });
   }
 };
 
 export const StudentControllers = {
   createStudent,
   getAllStudents,
+  getSingleStudents,
+  deleteSingleStudents,
+  updateSingleStudents,
 };

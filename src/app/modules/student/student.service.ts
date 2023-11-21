@@ -11,7 +11,30 @@ const getAllStudentsFromDB = async () => {
   return result;
 };
 
+const getSingleStudentsFromDB = async (id: string) => {
+  // const result = await StudentModel.findOne({id});
+  const result = await StudentModel.aggregate([
+    {
+      $match: { id: id },
+    },
+  ]);
+  return result;
+};
+const deleteSingleStudentsFromDB = async (id: string) => {
+  const result = await StudentModel.updateOne({ id }, { isDeleted: true });
+  return result;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const updateSingleStudentsFromDB = async (id: string, data: any) => {
+  const result = await StudentModel.updateOne({ id }, data);
+  return result;
+};
+
 export const StudentServices = {
   createStudentIntoDB,
   getAllStudentsFromDB,
+  getSingleStudentsFromDB,
+  deleteSingleStudentsFromDB,
+  updateSingleStudentsFromDB,
 };
