@@ -1,7 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { Guardian, Student, UserName } from './student.interface';
-import bcrypt from 'bcrypt';
-import confiq from '../../confiq';
+
 // import validator from 'validator';
 
 const userNameSchema = new Schema<UserName>({
@@ -25,7 +24,12 @@ const guardianSchema = new Schema<Guardian>({
 
 const StudentSchema = new Schema<Student>({
   id: { type: String },
-  password: { type: String },
+  user : {
+    type : Schema.Types.ObjectId,
+    require : true,
+    unique : true,
+    ref : 'User'
+  },
   name: {
     type: userNameSchema,
     required: true,
@@ -43,6 +47,10 @@ const StudentSchema = new Schema<Student>({
   guardian: guardianSchema,
   isActive: { type: Boolean, default: true, required: true },
   profileImg: String,
+  admissionSemester : {
+    type : Schema.Types.ObjectId,
+    ref : 'AcademicSemester'
+  },
   isDeleted: {
     type: Boolean,
     default: false,
@@ -50,25 +58,7 @@ const StudentSchema = new Schema<Student>({
 });
 
 // pre/save middleware/hook
-StudentSchema.pre('save', async function (next) {
-  // console.log(this, 'pre hook will save the data');
 
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this;
-
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(confiq.bcrypt_salt_round),
-  );
-  next();
-});
-
-// post save middleware
-StudentSchema.post('save', function (doc, next) {
-  doc.password = '';
-
-  next();
-});
 
 // Query Middleware
 
